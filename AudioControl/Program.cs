@@ -21,6 +21,8 @@ public static class SerializeAndDeserialize
 class Program
 {
 
+    bool applyChanges = true;
+    bool getdevice = true;
     public SerialPort serialPort = new SerialPort();
     public MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
 
@@ -32,8 +34,18 @@ class Program
     public void MainInterface()
     {
 
+        //print audio devices
+        if (getdevice)
+        {
+            foreach (var endpoint in enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active))
+            {
+                Console.WriteLine(endpoint.FriendlyName);
+                Console.WriteLine(endpoint.ID);
+            }
+        }
+        
         yamlMap = readMapFile(@"C:\Users\Schre\Documents\IdeaProjects\AudioControl\AudioControl\config.yaml");
-
+        
         var portNames = SerialPort.GetPortNames();
         foreach (var port in portNames)
         {
@@ -49,13 +61,14 @@ class Program
                 serialPort.Close();
             }
         }
+
     }
 
     public void SerialDataRecieved(object sender, SerialDataReceivedEventArgs e)
     {
         string inData = serialPort.ReadLine();
 
-        //Console.WriteLine(inData);
+        Console.WriteLine(inData);
 
         string[] tokens = inData.Split(':');
         // foreach (string token in tokens) {
@@ -79,16 +92,16 @@ class Program
 
     public void ApplySoundChanges(String id, float value, bool mute)
     {
-        foreach (var endpoint in enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active))
+        if (applyChanges)
         {
-            // Console.WriteLine(endpoint.FriendlyName);
-            // Console.WriteLine(endpoint.ID);
-
-            if (endpoint.ID == id)
+            foreach (var endpoint in enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active))
             {
-                float volume = value;
-                endpoint.AudioEndpointVolume.MasterVolumeLevelScalar = volume;
-                endpoint.AudioEndpointVolume.Mute = mute;
+
+                if (endpoint.ID == id)
+                {
+                    endpoint.AudioEndpointVolume.MasterVolumeLevelScalar = value/100;
+                    endpoint.AudioEndpointVolume.Mute = mute;
+                }
             }
         }
     }
@@ -100,7 +113,7 @@ class Program
             // Load the stream
             var yaml = new YamlDotNet.RepresentationModel.YamlStream();
             yaml.Load(reader);
-
+        
             // Examine the stream
             var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
 
