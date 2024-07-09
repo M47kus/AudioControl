@@ -43,9 +43,9 @@ class Program
                 Console.WriteLine(endpoint.ID);
             }
         }
-        
+
         yamlMap = readMapFile(@"C:\Users\Schre\Documents\IdeaProjects\AudioControl\AudioControl\config.yaml");
-        
+
         var portNames = SerialPort.GetPortNames();
         foreach (var port in portNames)
         {
@@ -70,22 +70,31 @@ class Program
 
         Console.WriteLine(inData);
 
-        string[] tokens = inData.Split(':');
-        // foreach (string token in tokens) {
-        //     Console.WriteLine(token);
-        // }
-
-        foreach (var entry in yamlMap.Children)
+        string[] tokens = inData.Split(';');
+        foreach (string token in tokens)
         {
-            // Console.WriteLine((YamlScalarNode)entry.Key);
-            // Console.WriteLine((YamlScalarNode)entry.Value);
+            Console.WriteLine(token);
 
-            string key = (string)(YamlScalarNode)entry.Key;
-
-            if (key == tokens[0])
+            string[] items = token.Split(':');
+            foreach (string item in items)
             {
-                ApplySoundChanges((string)(YamlScalarNode)entry.Value, float.Parse(tokens[1]), bool.Parse(tokens[2]));
+
+                foreach (var entry in yamlMap.Children)
+                {
+                    // Console.WriteLine((YamlScalarNode)entry.Key);
+                    // Console.WriteLine((YamlScalarNode)entry.Value);
+
+                    string key = (string)(YamlScalarNode)entry.Key;
+
+                    if (key == items[0])
+                    {
+                        //ApplySoundChanges((string)(YamlScalarNode)entry.Value, float.Parse(items[1]), bool.Parse(items[2]));
+                    }
+
+                }
+
             }
+
         }
 
     }
@@ -99,7 +108,7 @@ class Program
 
                 if (endpoint.ID == id)
                 {
-                    endpoint.AudioEndpointVolume.MasterVolumeLevelScalar = value/100;
+                    endpoint.AudioEndpointVolume.MasterVolumeLevelScalar = value / 100;
                     endpoint.AudioEndpointVolume.Mute = mute;
                 }
             }
@@ -113,7 +122,7 @@ class Program
             // Load the stream
             var yaml = new YamlDotNet.RepresentationModel.YamlStream();
             yaml.Load(reader);
-        
+
             // Examine the stream
             var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
 

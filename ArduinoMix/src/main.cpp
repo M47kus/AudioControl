@@ -117,13 +117,11 @@ void loop()
   // Serial.print("\t");
   // Serial.print(value_6);
 
+  delay(100);
 
-  // if (inrange(value_1, slide_value_1, slider_offset) == false)
-  // {
-    std::string str1 = "A0:" + std::to_string(value_1) + ":" + conv_bool(mute_1);
-    Serial.println(str1.c_str());
-    slide_value_1 = value_1;
-  // }
+  std::string str1 = "A0:" + std::to_string(value_1) + ":" + conv_bool(mute_1);
+    // Serial.println(str1.c_str());
+    // slide_value_1 = value_1;
 
   if (button1.isReleased())
   {
@@ -135,16 +133,13 @@ void loop()
     {
       mute_1 = true;
     }
-    std::string str = "A0:" + std::to_string(value_1) + ":" + conv_bool(mute_1);
-    Serial.print(str.c_str());
+    // std::string str = "A0:" + std::to_string(value_1) + ":" + conv_bool(mute_1);
+    // Serial.println(str.c_str());
   }
 
-  // if (inrange(value_2, slide_value_2, slider_offset) == false)
-  // {
-    std::string str2 = "A1:" + std::to_string(value_2) + ":" + conv_bool(mute_1);
-    Serial.print(str2.c_str());
-    slide_value_2 = value_2;
-  // }
+  std::string str2 = "A1:" + std::to_string(value_2) + ":" + conv_bool(mute_1);
+    // Serial.println(str2.c_str());
+    // slide_value_2 = value_2;
 
   if (button2.isReleased())
   {
@@ -156,16 +151,13 @@ void loop()
     {
       mute_2 = true;
     }
-    std::string str = "A1:" + std::to_string(value_2) + ":" + conv_bool(mute_2);
-    Serial.print(str.c_str());
+    // std::string str = "A1:" + std::to_string(value_2) + ":" + conv_bool(mute_2);
+    // Serial.println(str.c_str());
   }
 
-  // if (inrange(value_3, slide_value_3, slider_offset) == false)
-  // {
-    std::string str3 = "A2:" + std::to_string(value_3) + ":" + conv_bool(mute_3);
-    Serial.print(str3.c_str());
-    slide_value_3 = value_3;
-  // }
+  std::string str3 = "A2:" + std::to_string(value_3) + ":" + conv_bool(mute_3);
+    // Serial.println(str3.c_str());
+    // slide_value_3 = value_3;
 
   if (button3.isReleased())
   {
@@ -177,16 +169,13 @@ void loop()
     {
       mute_3 = true;
     }
-    std::string str = "A2:" + std::to_string(value_3) + ":" + conv_bool(mute_3);
-    Serial.print(str.c_str());
+    // std::string str = "A2:" + std::to_string(value_3) + ":" + conv_bool(mute_3);
+    // Serial.println(str.c_str());
   }
 
-  // if (inrange(value_4, slide_value_4, slider_offset) == false)
-  // {
-    std::string str4 = "A3:" + std::to_string(value_4) + ":" + conv_bool(mute_4);
-    Serial.print(str4.c_str());
-    slide_value_4 = value_4;
-  // }
+  std::string str4 = "A3:" + std::to_string(value_4) + ":" + conv_bool(mute_4);
+    // Serial.println(str4.c_str());
+    // slide_value_4 = value_4;
 
   if (button4.isReleased())
   {
@@ -198,16 +187,13 @@ void loop()
     {
       mute_4 = true;
     }
-    std::string str = "A3:" + std::to_string(value_4) + ":" + conv_bool(mute_4);
-    Serial.print(str.c_str());
+    // std::string str = "A3:" + std::to_string(value_4) + ":" + conv_bool(mute_4);
+    // Serial.println(str.c_str());
   }
 
-  // if (inrange(value_5, slide_value_5, slider_offset) == false)
-  // {
-    std::string str5 = "A4:" + std::to_string(value_5) + ":" + conv_bool(mute_5);
-    Serial.print(str5.c_str());
-    slide_value_5 = value_5;
-  // }
+  std::string str5 = "A4:" + std::to_string(value_5) + ":" + conv_bool(mute_5);
+    // Serial.println(str5.c_str());
+    // slide_value_5 = value_5;
 
   if (button5.isReleased())
   {
@@ -219,16 +205,13 @@ void loop()
     {
       mute_5 = true;
     }
-    std::string str = "A4:" + std::to_string(value_5) + ":" + conv_bool(mute_5);
-    Serial.print(str.c_str());
+    // std::string str = "A4:" + std::to_string(value_5) + ":" + conv_bool(mute_5);
+    // Serial.println(str.c_str());
   }
 
-  // if (inrange(value_6, slide_value_6, slider_offset) == false)
-  // {
-    std::string str6 = "A5:" + std::to_string(value_6) + ":" + conv_bool(mute_6);
-    Serial.print(str6.c_str());
-    slide_value_6 = value_6;
-  //}
+  std::string str6 = "A5:" + std::to_string(value_6) + ":" + conv_bool(mute_6);
+    // Serial.println(str6.c_str());
+    // slide_value_6 = value_6;
 
   if (button6.isReleased())
   {
@@ -240,7 +223,12 @@ void loop()
     {
       mute_6 = true;
     }
-    std::string str = "A5:" + std::to_string(value_6) + ":" + conv_bool(mute_6);
-    Serial.print(str.c_str());
+    // std::string str = "A5:" + std::to_string(value_6) + ":" + conv_bool(mute_6);
+    //Serial.println(str.c_str());
   }
+
+  std::string send = str1 + ";" + str1 + ";" + str2 + ";" + str3 + ";" + str4 + ";" + str5 + ";" + str6 + ";";
+
+  Serial.println(send.c_str());
 }
+
