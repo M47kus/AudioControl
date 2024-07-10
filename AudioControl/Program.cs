@@ -1,39 +1,33 @@
 ﻿using System.IO.Ports;
+using System.Runtime.CompilerServices;
 using NAudio.CoreAudioApi;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-public static class SerializeAndDeserialize
-{
-    public static string Serialize<T>(T obj)
-    {
-        var serializer = new SerializerBuilder().Build();
-        return serializer.Serialize(obj);
-    }
-    public static T Deserialize<T>(string yaml)
-    {
-        var deserializer = new DeserializerBuilder().Build();
-        return deserializer.Deserialize<T>(yaml);
-    }
-}
-
 class Program
 {
 
+    //default values
     bool applyChanges = true;
     bool getdevice = true;
+    String comPort = "COM8";
+    int BaudRate = 9600;
+    String configPath = @"C:\Users\Schre\Documents\IdeaProjects\AudioControl\AudioControl\config.yaml";
+
+    //global values
+
+    bool portOpen = false;
     public SerialPort serialPort = new SerialPort();
     public MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
-
     public YamlMappingNode yamlMap = new YamlMappingNode();
 
+    //Main Function
     public static void Main()
                 => new Program().MainInterface();
 
     public void MainInterface()
     {
-
         //print audio devices
         if (getdevice)
         {
@@ -44,21 +38,49 @@ class Program
             }
         }
 
-        yamlMap = readMapFile(@"C:\Users\Schre\Documents\IdeaProjects\AudioControl\AudioControl\config.yaml");
+        Console.WriteLine("using config: " + configPath);
+        yamlMap = readMapFile(configPath);
 
+        //load values from config
         var portNames = SerialPort.GetPortNames();
-        foreach (var port in portNames)
+        foreach (var entry in yamlMap.Children)
         {
-            if (port == "COM8")
+            if ((string)(YamlScalarNode)entry.Key == "COM")
             {
-                serialPort.PortName = "COM8";
-                serialPort.BaudRate = 9600;
-                serialPort.DtrEnable = true;
-                serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialDataRecieved);
-                serialPort.Open();
+                comPort = (string)(YamlScalarNode)entry.Value;
+            }
+            else if ((string)(YamlScalarNode)entry.Key == "BaudRate")
+            {
+                BaudRate = int.Parse((string)(YamlScalarNode)entry.Value);
+            }
+        }
 
-                Console.ReadKey();
-                serialPort.Close();
+        while (portOpen != true)
+        {
+            Console.WriteLine("not conected");
+            //open COM port
+            foreach (var port in portNames)
+            {
+                if (port == comPort)
+                {
+                    serialPort.PortName = comPort;
+                    serialPort.BaudRate = BaudRate;
+                    serialPort.DtrEnable = true;
+                    serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialDataRecieved);
+                    serialPort.Open();
+
+                    portOpen = true;
+                    Console.WriteLine("conected");
+
+                    // while(portNames.Contains(comPort)) {
+                    //     portNames = SerialPort.GetPortNames();
+                    //     Console.WriteLine(portNames.Contains(comPort));
+                    // }
+                    Console.ReadKey();
+                    Console.WriteLine("disconect");
+                    serialPort.Close();
+                    portOpen = false;
+                }
             }
         }
 
@@ -68,12 +90,12 @@ class Program
     {
         string inData = serialPort.ReadLine();
 
-        Console.WriteLine(inData);
+        //Console.WriteLine(inData);
 
         string[] tokens = inData.Split(';');
         foreach (string token in tokens)
         {
-            Console.WriteLine(token);
+            //Console.WriteLine(token);
 
             string[] items = token.Split(':');
             foreach (string item in items)
@@ -88,7 +110,7 @@ class Program
 
                     if (key == items[0])
                     {
-                        //ApplySoundChanges((string)(YamlScalarNode)entry.Value, float.Parse(items[1]), bool.Parse(items[2]));
+                        ApplySoundChanges((string)(YamlScalarNode)entry.Value, float.Parse(items[1]), bool.Parse(items[2]));
                     }
 
                 }
