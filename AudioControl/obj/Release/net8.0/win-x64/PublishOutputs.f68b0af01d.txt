@@ -1,0 +1,2 @@
+C:\Users\Schre\Documents\IdeaProjects\AudioControl\AudioControl\bin\Release\net8.0\win-x64\publish\AudioControl.pdb
+C:\Users\Schre\Documents\IdeaProjects\AudioControl\AudioControl\bin\Release\net8.0\win-x64\publish\AudioControl.exe
